@@ -1,0 +1,104 @@
+.list-product {
+  background-color: #f9fbfd;
+}
+
+.product-title {
+  margin: 0 50px;
+  padding-top: 50px;
+}
+.product-title input {
+  padding: 4px 8px;
+  outline: none;
+  width: 400px;
+}
+.product-table {
+  margin: 50px;
+  padding-bottom: 50px;
+}
+
+.product-table table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.product-table td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.product-table thead tr {
+  background-color: #dddddd;
+}
+
+.product-table tr:nth-child(even) {
+  background-color: #f9fbfd;
+}
+
+/* Action */
+.action {
+  background-color: #f9fbfd;
+  padding: 40px 0;
+}
+
+.action-product {
+  width: 800px;
+  margin: auto;
+}
+
+.action-title {
+  padding-bottom: 20px;
+}
+
+.action-form {
+  display: flex;
+  justify-content: space-between;
+  /* gap: 20px !important; */
+}
+
+/* Order */
+.order {
+  width: 69%;
+  margin: auto;
+}
+
+.order-title {
+  text-align: left;
+  margin: 20px 0;
+  background-color: #eeeeee;
+  padding: 20px;
+}
+
+.order table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 50px 0;
+}
+
+.order td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.order table thead tr {
+  background-color: #eeeeee;
+}
+
+.list-product .page {
+  text-align: right;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.list-product .page button {
+  border: none;
+  padding: 8px 18px;
+  text-align: center;
+}
+
+.list-product .page span {
+  font-size: 18px;
+  padding: 0 10px;
+}
