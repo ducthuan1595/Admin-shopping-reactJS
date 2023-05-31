@@ -46,8 +46,10 @@ const Form = () => {
     if(!isValid) {
       const res = await requires.login(valueInput.email, valueInput.password);
       if(res.data.message === 'ok') {
+        console.log(res.data);
         setCurrUser(res.data.user);
-        cookie.set('currUser', res.data.user);
+        cookie.set('currUser', res.data.user, {path: '/'});
+        cookie.set('access-token', res.data.token, {path: '/'})
         navigate('/');
       }else {
         setMessageError("Please, Invalid value!");

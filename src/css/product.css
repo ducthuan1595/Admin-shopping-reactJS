@@ -86,19 +86,19 @@
   background-color: #eeeeee;
 }
 
-.list-product .page {
+.page {
   text-align: right;
   margin-bottom: 10px;
   margin-right: 10px;
 }
 
-.list-product .page button {
+.page button {
   border: none;
   padding: 8px 18px;
   text-align: center;
 }
 
-.list-product .page span {
+.page span {
   font-size: 18px;
   padding: 0 10px;
 }

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { requires } from '../../services/api';
+import { requires } from "../../services/api";
+import { getTokenFromCookie } from "../../store/userStore";
 
 const ActionProduct = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { params } = useParams();
   const valueEdit = location.state?.data;
-
-  console.log(params);
 
   const [inputValue, setInputValue] = useState({
     name: params === "edit-product" ? valueEdit.name : "",
@@ -20,10 +19,10 @@ const ActionProduct = () => {
     count: params === "edit-product" ? valueEdit.count : "",
   });
   const [files, setFiles] = useState([]);
-  const [errMessage, setErrMessage] = useState('');
+  const [errMessage, setErrMessage] = useState("");
 
   const handleChangeInput = (e, id) => {
-    const cpState = {...inputValue};
+    const cpState = { ...inputValue };
     cpState[id] = e.target.value;
     setInputValue(cpState);
   };
@@ -31,64 +30,71 @@ const ActionProduct = () => {
   const handleChangeFile = (e) => {
     const files = e.target.files;
     setFiles(files);
-  }
+  };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(params === 'edit-product') {
-      console.log('error');
-      const formData = new FormData();
-      for(let i = 0; i < files.length; i++) {
-        formData.append(`images`, files[i]);
+    if (params === "edit-product") {
+      if(inputValue) {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append(`images`, files[i]);
+        }
+        formData.append("name", inputValue.name);
+        formData.append("price", inputValue.price);
+        formData.append("category", inputValue.category);
+        formData.append("shortDesc", inputValue.shortDesc);
+        formData.append("longDesc", inputValue.longDesc);
+        formData.append("count", inputValue.count);
+        formData.append("productId", valueEdit._id);
+        const config = {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${getTokenFromCookie()}`,
+          },
+          
+        };
+        const res = await requires.editProduct(config, formData);
+        if (res.data.message === "ok") {
+          navigate("/product");
+        } else {
+          setErrMessage(res.data.message);
+        }
       }
-      formData.append('name', inputValue.name);
-      formData.append('price', inputValue.price);
-      formData.append('category', inputValue.category);
-      formData.append('shortDesc', inputValue.shortDesc);
-      formData.append('longDesc', inputValue.longDesc);
-      formData.append('count', inputValue.count);
-      formData.append('productId', valueEdit._id);
-      const config ={
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer 12345`
-        },
-        body: formData,
-      };
-      const res = await requires.editProduct(config, formData);
-      if(res.data.message === 'ok') {
-        navigate('/product');
-      }else {
-        setErrMessage(res.data.message);
-      }
-    }else {
-      const formData = new FormData();
-     
-      formData.append('name', inputValue.name);
-      formData.append('price', inputValue.price);
-      formData.append('category', inputValue.category);
-      formData.append('shortDesc', inputValue.shortDesc);
-      formData.append('longDesc', inputValue.longDesc);
-      formData.append('count', inputValue.count);
-      for(let i = 0; i < files.length; i++) {
-        formData.append(`images`, files[i]);
-      }
-      for (const pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]);
-      }
-
-      const config ={
-        method: "POST",
-        headers: { "Content-Type": "multipart/form-data" },
-      };
-      const res = await requires.addProduct(config, formData);
-      if(res.data.message === 'ok') {
-        navigate('/product');
-      }else {
-        setErrMessage(res.data.message);
+    } else {
+      if(inputValue) {
+        const formData = new FormData();
+  
+        formData.append("name", inputValue.name);
+        formData.append("price", inputValue.price);
+        formData.append("category", inputValue.category);
+        formData.append("shortDesc", inputValue.shortDesc);
+        formData.append("longDesc", inputValue.longDesc);
+        formData.append("count", inputValue.count);
+        for (let i = 0; i < files.length; i++) {
+          formData.append(`images`, files[i]);
+        }
+        for (const pair of formData.entries()) {
+          console.log(pair[0] + ", " + pair[1]);
+        }
+  
+        const config = {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${getTokenFromCookie()}`,
+          },
+        };
+        const res = await requires.addProduct(config, formData);
+        if (res.data.message === "ok") {
+          navigate("/product");
+        } else {
+          setErrMessage(res.data.message);
+        }
       }
     }
-  }
+  };
 
   return (
     <div className="action">
@@ -177,8 +183,8 @@ const ActionProduct = () => {
                 type="file"
                 multiple
                 className="form-control"
-              onChange={(e) => handleChangeFile(e, 'images')}
-              aria-label="First name"
+                onChange={(e) => handleChangeFile(e, "images")}
+                aria-label="First name"
               />
             </div>
             <div className="col-md-6">

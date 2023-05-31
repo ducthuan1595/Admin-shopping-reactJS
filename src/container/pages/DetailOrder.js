@@ -20,6 +20,7 @@ const DetailOrder = () => {
         <h2>INFORMATION ORDER</h2>
         <div>Name: {order.user.name}</div>
         <div>Phone: {order.user.phone}</div>
+        <div>Email: {order.user.email}</div>
         <div>Address {order.user.address}</div>
         <div>Total: {amount} VND</div>
       </section>

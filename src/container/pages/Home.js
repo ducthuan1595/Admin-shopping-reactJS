@@ -9,6 +9,7 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
   const [outcome, setOutcome] = useState(0);
+  const [getPage, setGetPage] = useState({});
 
   const getAllUser = async() => {
     const res = await requires.getAllUser();
@@ -18,11 +19,13 @@ const Home = () => {
     }
   };
 
-  const getAllOrder = async() => {
-    const res = await requires.getAllOrder();
+  const getAllOrder = async(page) => {
+    const pages = page || 1;
+    const res = await requires.getAllOrder(pages);
     if(res.data.message === 'ok') {
-      // console.log('order', res.data.orders.reverse());
-      setOrders(res.data.orders.reverse())
+      console.log('order', res.data);
+      setGetPage(res.data.orders);
+      setOrders(res.data.orders.orders?.reverse())
     }
   };
 
@@ -43,7 +46,21 @@ const Home = () => {
     if(res.data.message === 'ok') {
       navigate(`/order/${id}`, {state: {data: res.data.order}});
     }
-  }
+  };
+
+  const handlePrev = () => {
+    if (getPage.currPage > 1) {
+      const page = +getPage.currPage - 1;
+      getAllOrder(page);
+    }
+  };
+
+  const handleNext = () => {
+    if (getPage.totalPage > getPage.currPage) {
+      const page = +getPage.currPage + 1;
+      getAllOrder(page);
+    }
+  };
 
   return (
     <div className=''>
@@ -110,6 +127,11 @@ const Home = () => {
           })}
         </tbody>
       </table>
+      <div className="page">
+          <button onClick={handlePrev}>««</button>
+          <span>{getPage?.currPage}</span>
+          <button onClick={handleNext}>»»</button>
+        </div>
     </section>
     </div>
     </div>
