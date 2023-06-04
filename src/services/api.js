@@ -4,9 +4,9 @@ import { getTokenFromCookie } from '../store/userStore';
 
 export const url = 'http://localhost:5050/api';
 
-axios.defaults.validateStatus = (status) => {
-  return status < 500;
-};
+// axios.defaults.validateStatus = (status) => {
+//   return status < 500;
+// };
 
 export const requires = {
 
@@ -89,5 +89,16 @@ export const requires = {
         return status < 500;
       }
     })
+  },
+
+  getRoomsChat: () => {
+    return axios.get(`${url}/get-room`);
+  },
+  getMessages: (roomId) => {
+    return axios.get(`${url}/get-message/${roomId}`);
+  },
+
+  sendMessage: (value) => {
+    return axios.post(`${url}/send-message`, value);
   }
 }

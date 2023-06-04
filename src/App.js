@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 import Navbar from './layout/Navbar';
 import Form from './container/auth/Form';
@@ -27,7 +28,7 @@ function App() {
           <Route path='/order/:params' element={<DetailOrder />} />
         </Route>
       </Routes>
-      
+      <ToastContainer />
     </div>
   );
 }

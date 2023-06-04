@@ -1,0 +1,18 @@
+  .scroll-bar::-webkit-scrollbar {
+    width: 0;
+    }
+
+.input-message {
+  position: fixed;
+    bottom: 66px;
+    right: 50px;
+    width: 70%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-pointer:hover,
+.cursor-pointer:active {
+  opacity: 0.6;
+}
