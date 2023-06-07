@@ -1,6 +1,5 @@
 import io from 'socket.io-client';
 import { url } from '../services/api';
 
-export const socket = io.connect(url);
+export const socket = io.connect('http://localhost:5050');
 
-socket.emit('message', 'Hello server!');

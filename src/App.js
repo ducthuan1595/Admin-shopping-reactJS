@@ -9,11 +9,17 @@ import Chat from './container/pages/Chat';
 import ActionProduct from './container/pages/ActionProduct';
 import DetailOrder from './container/pages/DetailOrder';
 import Check from './container/auth/Check';
+import { socket } from './socket';
 import './css/App.css';
 import './css/product.css';
 import './css/chat.css';
 
 function App() {
+
+  socket.on('event', () => {
+    console.log('Connect to server');
+  })
+
   return (
     <div className="App">
       <Navbar />

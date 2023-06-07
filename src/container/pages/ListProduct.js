@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { requires } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from 'buffer';
+import { toast } from 'react-toastify';
+import handleToast from '../../util/toast';
 
 const ListProduct = () => {
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ const ListProduct = () => {
       const res = await requires.deleteProduct(id);
       if(res.data.message === 'ok') {
         getAllProduct();
+        handleToast(toast.success, 'Remove product successfully!');
       }
     }
   };

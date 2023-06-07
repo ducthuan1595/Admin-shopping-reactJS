@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import handleToast from "../../util/toast";
 import { requires } from "../../services/api";
 import { Context } from "../../store/userStore";
+import { socket } from "../../socket";
 
 const Chat = () => {
   const messagesEndRef = useRef();
@@ -11,8 +12,11 @@ const Chat = () => {
 
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [roomId, setRoomId] = useState([]);
+  const [roomId, setRoomId] = useState();
   const [messageInput, setMessageInput] = useState("");
+  const [active, setActive] = useState(null)
+
+  // socket.emit('userData', currUser);
 
   const fetchRooms = async () => {
     try {
@@ -31,6 +35,7 @@ const Chat = () => {
 
   const handleMessage = async (id) => {
     if(id) {
+      setActive(id);
       try {
         const { data } = await requires.getMessages(id);
         if (data.message === "ok") {
@@ -50,8 +55,9 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+
   const handleSendMessage = async() => {
-    if(!messageInput) {
+    if(!messageInput && !roomId) {
       return;
     }
     try{
@@ -62,7 +68,8 @@ const Chat = () => {
       }
       const { data } = await requires.sendMessage(value);
       if(data.message === 'ok') {
-        handleMessage(roomId);
+        socket.emit("send-message", data.result);
+        setMessages(prev => [...prev, data.result]);
         setMessageInput('');
       }
     }catch(err) {
@@ -70,6 +77,38 @@ const Chat = () => {
     }
   };
 
+  const handleEnter = (e) => {
+    if(e.key === 'Enter' && messageInput) {
+      handleSendMessage();
+    }
+  }
+
+
+  // socket
+  useEffect(() => {
+    socket.on('chat', data => {
+      if(data.action === 'create-room') {
+        setRooms(prev => [...prev, data.result])
+      }
+      if(data.action === 'delete-room') {
+        const newRoom = rooms.filter(r => r._id.toString() !== data.result._id.toString()).reverse();
+        setRooms(newRoom);
+        fetchRooms();
+        setMessages([]);
+      }
+    })
+
+    socket.on('receiver', (data) => {
+      if(messages.length >= 1) {
+        setMessages(prev => [...prev, data]);
+      }
+    })
+    
+    return () => {
+      socket.removeAllListeners()
+    }
+  }, [messages])
+  
   return (
     <div
       className="p-4 bg-light text-dark scroll-bar"
@@ -92,18 +131,21 @@ const Chat = () => {
         >
           {rooms &&
             rooms?.map((r) => {
+              const isActive = active === r._id;
               return (
+                <div key={r._id}>
                 <div
-                  key={r._id}
                   onClick={handleMessage.bind(null, r._id)}
-                  className="p-1 cursor-pointer"
+                  className="p-1 cursor-pointer active-room"
+                  style={{backgroundColor: `${isActive ? '#d6e6eb': ''}`}}
                 >
                   <div className="">
                     <i className="fas fa-user-tie fs-4"></i>
-                    <span className="ms-2 fs-5">{r.client.name}</span>
+                    <span className="ms-2 fs-5">{r.client?.name}</span>
                   </div>
-                  <span>Email: {r.client.email}</span>
-                  <hr></hr>
+                  <span>Email: {r.client?.email}</span>
+                </div>
+                <hr></hr>
                 </div>
               );
             })}
@@ -120,20 +162,21 @@ const Chat = () => {
           >
             {messages &&
               messages.map((m) => {
+                console.log(messages);
                 return (
                   <div
                     key={m._id}
                     className="d-flex flex-wrap"
                     style={{
                       justifyContent:
-                        m.creator.role === 0 ? "flex-start" : "flex-end",
+                        m.creator?.role === 0 ? "flex-start" : "flex-end",
                       wordWrap: "break-word",
                     }}
                   >
                     <div
                       style={{
                         backgroundColor:
-                          m.creator.role === 0 ? "#e4fbf8" : "#eef5ff",
+                          m.creator?.role === 0 ? "#e4fbf8" : "#eef5ff",
                         // textAlign: m.creator.role === 0 ? "left" : "right",
                         // textAlign: m.creator.role === 0 ? "left" : "right",
                         width: "fit-content",
@@ -154,8 +197,8 @@ const Chat = () => {
               placeholder="Enter to message"
               className="form-control"
               value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)
-              }
+              onChange={(e) => setMessageInput(e.target.value)}
+              onKeyDown={handleEnter}
             />
             <button className="btn btn-primary" onClick={handleSendMessage}>
               <i className="fas fa-paper-plane"></i>
