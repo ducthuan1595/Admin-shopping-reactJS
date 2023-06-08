@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { requires } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from 'buffer';
 import { toast } from 'react-toastify';
 import handleToast from '../../util/toast';
+import { Context } from "../../store/userStore";
 
 const ListProduct = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState(null);
   const [getProducts, setGetProducts] = useState();
+
+  const { currUser } = useContext(Context);
 
   const getAllProduct = async (page) => {
     const pages = page || 1;
@@ -49,10 +52,12 @@ const ListProduct = () => {
   const handleDelete = async(id) => {
     const alter = window.confirm('Are you sure?')
     if(alter) {
-      const res = await requires.deleteProduct(id);
+      const res = await requires.deleteProduct(id, currUser.userId);
       if(res.data.message === 'ok') {
         getAllProduct();
         handleToast(toast.success, 'Remove product successfully!');
+      }else {
+        handleToast(toast.error, res.data.message);
       }
     }
   };

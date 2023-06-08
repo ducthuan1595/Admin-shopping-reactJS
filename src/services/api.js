@@ -52,13 +52,13 @@ export const requires = {
       }
     });
   },
-  deleteProduct: (productId) => {
-    return jwtAxios.delete(`${url}/delete-product/${productId}`, {
+  deleteProduct: (productId, userId) => {
+    return jwtAxios.delete(`${url}/delete-product/${productId}?userId=${userId}`, {
       headers: {
         'Authorization': `Bearer ${getTokenFromCookie()}`
       },
       validateStatus: function (status) {
-        return status < 500;
+        return status = true;
       }
     });
   },
@@ -92,13 +92,32 @@ export const requires = {
   },
 
   getRoomsChat: () => {
-    return axios.get(`${url}/get-room`);
+    return axios.get(`${url}/get-room`, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
   },
   getMessages: (roomId) => {
-    return axios.get(`${url}/get-message/${roomId}`);
+    return axios.get(`${url}/get-message/${roomId}`, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
   },
 
   sendMessage: (value) => {
-    return axios.post(`${url}/send-message`, value);
-  }
+    return axios.post(`${url}/send-message`, value, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+  },
+  deleteRoom: (roomId) => {
+    return axios.delete(`${url}/delete-room/${roomId}`, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+  },
 }

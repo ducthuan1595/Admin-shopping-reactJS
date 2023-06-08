@@ -8,7 +8,7 @@ import { socket } from "../../socket";
 
 const Chat = () => {
   const messagesEndRef = useRef();
-  const { currUser } = useContext(Context);
+  const { currUser, setIsAudio } = useContext(Context);
 
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -17,6 +17,8 @@ const Chat = () => {
   const [active, setActive] = useState(null)
 
   // socket.emit('userData', currUser);
+
+  
 
   const fetchRooms = async () => {
     try {
@@ -60,6 +62,18 @@ const Chat = () => {
     if(!messageInput && !roomId) {
       return;
     }
+    console.log(messageInput == '/end');
+    if(messageInput == '/end') {
+      const { data } = await requires.deleteRoom(roomId);
+      if(data.message === 'ok') {
+        // socket.emit('end-room', data.result);
+        // const newRoom = rooms.filter(r => r._id.toString() !== data.result._id.toString()).reverse();
+        // setRooms(newRoom);
+        // fetchRooms();
+        // setMessages([]);
+      }
+      return;
+    }
     try{
       const value = {
         content: messageInput,
@@ -88,20 +102,22 @@ const Chat = () => {
   useEffect(() => {
     socket.on('chat', data => {
       if(data.action === 'create-room') {
-        setRooms(prev => [...prev, data.result])
+        setRooms(prev => [...prev, data.result]);
       }
       if(data.action === 'delete-room') {
         const newRoom = rooms.filter(r => r._id.toString() !== data.result._id.toString()).reverse();
         setRooms(newRoom);
         fetchRooms();
         setMessages([]);
+        setMessageInput('');
       }
     })
 
     socket.on('receiver', (data) => {
-      if(messages.length >= 1) {
-        setMessages(prev => [...prev, data]);
-      }
+        setIsAudio(prev => !prev)
+        if(messages.length >= 1) {
+          setMessages(prev => [...prev, data]);
+        }
     })
     
     return () => {
@@ -194,7 +210,7 @@ const Chat = () => {
           <div className="col d-flex input-message">
             <input
               type="text"
-              placeholder="Enter to message"
+              placeholder="Enter to send or /end to the end"
               className="form-control"
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}

@@ -1,7 +1,7 @@
 const handleToast = (title, message) => {
   return (
     title(message, {
-      position: "top-right",
+      position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,

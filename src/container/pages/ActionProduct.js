@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import handleToast from "../../util/toast";
 
 import { requires } from "../../services/api";
 import { getTokenFromCookie } from "../../store/userStore";
+import { Context } from "../../store/userStore";
 
 const ActionProduct = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { params } = useParams();
+  const { currUser } = useContext(Context);
   const valueEdit = location.state?.data;
 
   const [inputValue, setInputValue] = useState({
@@ -35,7 +39,7 @@ const ActionProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (params === "edit-product") {
-      if(inputValue) {
+      if (inputValue) {
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
           formData.append(`images`, files[i]);
@@ -47,30 +51,35 @@ const ActionProduct = () => {
         formData.append("longDesc", inputValue.longDesc);
         formData.append("count", inputValue.count);
         formData.append("productId", valueEdit._id);
+        formData.append("userId", currUser.userId);
         const config = {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data",
-            'Authorization': `Bearer ${getTokenFromCookie()}`,
+            Authorization: `Bearer ${getTokenFromCookie()}`,
           },
-          
+          validateStatus: function (status) {
+            return status < 500;
+          }
         };
         const res = await requires.editProduct(config, formData);
         if (res.data.message === "ok") {
           navigate("/product");
         } else {
-          setErrMessage(res.data.message);
+          // setErrMessage(res.data.message);
+          handleToast(toast.error, res.data.message);
         }
       }
     } else {
-      if(inputValue) {
+      if (inputValue) {
         const formData = new FormData();
-  
+
         formData.append("name", inputValue.name);
         formData.append("price", inputValue.price);
         formData.append("category", inputValue.category);
         formData.append("shortDesc", inputValue.shortDesc);
         formData.append("longDesc", inputValue.longDesc);
+        formData.append("userId", currUser.userId);
         formData.append("count", inputValue.count);
         for (let i = 0; i < files.length; i++) {
           formData.append(`images`, files[i]);
@@ -78,19 +87,23 @@ const ActionProduct = () => {
         for (const pair of formData.entries()) {
           console.log(pair[0] + ", " + pair[1]);
         }
-  
+
         const config = {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data",
-            'Authorization': `Bearer ${getTokenFromCookie()}`,
+            Authorization: `Bearer ${getTokenFromCookie()}`,
           },
+          validateStatus: function (status) {
+            return status < 500;
+          }
         };
         const res = await requires.addProduct(config, formData);
         if (res.data.message === "ok") {
           navigate("/product");
         } else {
-          setErrMessage(res.data.message);
+          handleToast(toast.error, res.data.message);
+          // setErrMessage(res.data.message);
         }
       }
     }

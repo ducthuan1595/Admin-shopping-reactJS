@@ -12,10 +12,13 @@ export const getTokenFromCookie = () => {
 
 const ProviderStore = ({ children }) => {
   const [currUser, setCurrUser] = useState(userCurr);
+  const [isAudio, setIsAudio] = useState(false);
 
   const value = {
     currUser,
-    setCurrUser
+    setCurrUser,
+    setIsAudio,
+    isAudio
   }
   return (
     <Context.Provider value={value}>
