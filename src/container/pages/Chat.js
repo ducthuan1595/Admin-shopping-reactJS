@@ -62,7 +62,6 @@ const Chat = () => {
     if(!messageInput && !roomId) {
       return;
     }
-    console.log(messageInput == '/end');
     if(messageInput == '/end') {
       const { data } = await requires.deleteRoom(roomId);
       if(data.message === 'ok') {
@@ -114,8 +113,8 @@ const Chat = () => {
     })
 
     socket.on('receiver', (data) => {
-        setIsAudio(prev => !prev)
-        if(messages.length >= 1) {
+      if(messages.length >= 1) {
+          setIsAudio(prev => !prev)
           setMessages(prev => [...prev, data]);
         }
     })
@@ -172,7 +171,7 @@ const Chat = () => {
             style={{
               overflowY: "auto",
               overflowX: "none",
-              height: "518px",
+              height: "500px",
             }}
             className="scroll-bar"
           >
