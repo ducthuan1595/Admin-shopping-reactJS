@@ -120,4 +120,8 @@ export const requires = {
       }
     });
   },
+
+//   getImage: (img) => {
+//     return axios.get(`${url}/send-image/${img}`)
+//   }
 }

@@ -5,6 +5,7 @@ import { Buffer } from 'buffer';
 import { toast } from 'react-toastify';
 import handleToast from '../../util/toast';
 import { Context } from "../../store/userStore";
+import { url } from "../../services/api";
 
 const ListProduct = () => {
   const navigate = useNavigate();
@@ -73,8 +74,6 @@ const ListProduct = () => {
     setSearch(e.target.value);
   };
 
-  console.log(products);
-
   return (
     <div className="list-product">
       <div className="product-title">
@@ -97,7 +96,10 @@ const ListProduct = () => {
           <tbody>
             {products &&
               products?.map((item, i) => {
-                const base64 = Buffer.from(item.images[0]).toString('base64');
+                // const base64 = Buffer.from(item.images[0]).toString('base64');
+                
+                // console.log(process.env.NODE_ENV);
+  
                 let price = item?.price
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -109,7 +111,7 @@ const ListProduct = () => {
                     <td style={{ textAlign: "center" }}>
                       <img
                         style={{ width: "100px" }}
-                        src={'data:image/jpeg;base64,' + base64}
+                        src={`${url}/image/${item.images[0]}`}
                         alt={item.name}
                       />
                     </td>

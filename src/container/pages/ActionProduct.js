@@ -39,7 +39,7 @@ const ActionProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (params === "edit-product") {
-      if (inputValue) {
+      if (inputValue && files.length) {
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
           formData.append(`images`, files[i]);
@@ -69,9 +69,11 @@ const ActionProduct = () => {
           // setErrMessage(res.data.message);
           handleToast(toast.error, res.data.message);
         }
+      }else {
+        handleToast(toast.warning, 'Invalid value!');
       }
     } else {
-      if (inputValue) {
+      if (inputValue && files.length) {
         const formData = new FormData();
 
         formData.append("name", inputValue.name);
@@ -105,6 +107,8 @@ const ActionProduct = () => {
           handleToast(toast.error, res.data.message);
           // setErrMessage(res.data.message);
         }
+      }else {
+        handleToast(toast.warning, 'Invalid value!');
       }
     }
   };
@@ -149,7 +153,7 @@ const ActionProduct = () => {
               Price Product
             </label>
             <input
-              type="text"
+              type="number"
               value={inputValue.price}
               className="form-control"
               id="formGroupExampleInput2"
