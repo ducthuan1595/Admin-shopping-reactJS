@@ -2,7 +2,8 @@ import axios from 'axios';
 import { jwtAxios } from './jwt';
 import { getTokenFromCookie } from '../store/userStore';
 
-export const url = process.env.REACT_APP_API_URL;
+export const URL_API = process.env.REACT_APP_API_URL;
+export const url = `${URL_API}/api`;
 
 // axios.defaults.validateStatus = (status) => {
 //   return status < 500;
