@@ -10,6 +10,7 @@ const Home = () => {
   const [orders, setOrders] = useState([]);
   const [outcome, setOutcome] = useState(0);
   const [getPage, setGetPage] = useState({});
+  const [totalOrder, setTotalOrder] = useState(0);
 
   const getAllUser = async() => {
     const res = await requires.getAllUser();
@@ -25,6 +26,7 @@ const Home = () => {
     if(res.data.message === 'ok') {
       console.log('order', res.data);
       setGetPage(res.data.orders);
+      setTotalOrder(res.data.orders.totalNumber)
       setOrders(res.data.orders.orders?.reverse())
     }
   };
@@ -86,7 +88,7 @@ const Home = () => {
         </div>
         <div className="home-title__group">
           <div>
-            <h3>{orders.length}</h3>
+            <h3>{totalOrder}</h3>
             <span>Orders</span>
           </div>
           <div>

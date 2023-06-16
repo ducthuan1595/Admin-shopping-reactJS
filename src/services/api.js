@@ -2,7 +2,7 @@ import axios from 'axios';
 import { jwtAxios } from './jwt';
 import { getTokenFromCookie } from '../store/userStore';
 
-export const url = 'https://server-shopping.vercel.app/api';
+export const url = process.env.REACT_APP_API_URL;
 
 // axios.defaults.validateStatus = (status) => {
 //   return status < 500;
