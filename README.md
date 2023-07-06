@@ -1,6 +1,16 @@
 ## Link online
 `https://admin-shopping-react-js.vercel.app/form/login`
 
+## ENV
+REACT_APP_API_URL=
+
+## FEATURES
+Display items
+Order products
+CRUD product
+Revenue and product management
+Customer chat support
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
