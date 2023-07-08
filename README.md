@@ -1,23 +1,29 @@
-## Link online
-`https://admin-shopping-react-js.vercel.app/form/login`
+## Project:  E-ECOMMERCE 
 
-## ENV
-REACT_APP_API_URL=
+* Assignment 03 (Funix)
+
+* Create e-commerce platform is an online marketplace that allows businesses and individuals to sell products online. 
+
+* Number of members: 01
+
+* Technologies:
+- FontEnd: HTML/CSS, ReactJs, Javascript
+- BackEnd: NodeJs, MongoDb(mongoose)
 
 ## FEATURES
-Display items
+Create order
 Order products
 CRUD product
-Revenue and product management
-Customer chat support
+Revenue, product management and orders with Admin page
+Customer chat support with socket.io
+...
 
-# Getting Started with Create React App
+## Link demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`https://server-shopping.vercel.app/`
 
-## Available Scripts
 
-In the project directory, you can run:
+
 
 ### `npm start`
 
